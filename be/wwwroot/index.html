@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload and Download</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- File input for uploading a file -->
+    <input type="file" id="fileInput">
+    <button id="uploadButton">Upload File</button>
+
+    <!-- Button to download the zipped folder -->
+    <button id="downloadButton">Download Zipped Folder</button>
+
+    <script>$(document).ready(function () {
+            // Upload file
+            $('#uploadButton').click(function () {
+                const file = $('#fileInput')[0].files[0]; // Get the selected file
+                if (!file) {
+                    alert("Please select a file to upload.");
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("files", file); // Append the file to the form data
+
+                $.ajax({
+                    url: 'https://localhost:7158/api/FileDownload/upload', // Your API endpoint for upload
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        alert("File uploaded successfully.");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error uploading file: " + textStatus + " - " + errorThrown);
+                    }
+                });
+            });
+
+            // Download zipped folder
+            $('#downloadButton').click(function () {
+                $.ajax({
+                    url: 'https://localhost:7158/api/FileDownload/download-zip', // Your API endpoint for zip download
+                    type: 'GET',
+                    xhrFields: {
+                        responseType: 'blob'
+                    },
+                    success: function (blob) {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        a.download = 'Crud.zip'; // File name for the downloaded zip
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error downloading file: " + textStatus + " - " + errorThrown);
+                    }
+                });
+            });
+        });</script>
+</body>
+</html>
