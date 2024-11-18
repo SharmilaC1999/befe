@@ -7,7 +7,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <!-- File input for uploading a file -->
+    <h1>File Upload and Download</h1>
+
+    <!-- File input for uploading files -->
     <input type="file" id="fileInput">
     <button id="uploadButton">Upload File</button>
 
@@ -16,6 +18,8 @@
 
     <script>
         $(document).ready(function () {
+            const baseUrl = "https://trialserver-a3f4dhgmfvf5afag.canadaeast-01.azurewebsites.net/api/FileDownload";
+
             // Upload file
             $('#uploadButton').click(function () {
                 const file = $('#fileInput')[0].files[0]; // Get the selected file
@@ -28,7 +32,7 @@
                 formData.append("files", file); // Append the file to the form data
 
                 $.ajax({
-                    url: 'https://localhost:7158/api/FileDownload/upload', // Your API endpoint for upload
+                    url: baseUrl + '/upload', // Upload endpoint
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -45,7 +49,7 @@
             // Download zipped folder
             $('#downloadButton').click(function () {
                 $.ajax({
-                    url: 'https://localhost:7158/api/FileDownload/download-zip', // Your API endpoint for zip download
+                    url: baseUrl + '/download-zip', // Download endpoint
                     type: 'GET',
                     xhrFields: {
                         responseType: 'blob'
@@ -69,5 +73,3 @@
     </script>
 </body>
 </html>
-
-has context menu
