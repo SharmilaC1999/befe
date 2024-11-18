@@ -28,7 +28,7 @@
                 formData.append("files", file); // Append the file to the form data
 
                 $.ajax({
-                    url: 'https://trialserver-a3f4dhgmfvf5afag.canadaeast-01.azurewebsites.net/api/FileDownload/upload', // Azure API endpoint for upload
+                    url: 'https://localhost:7158/api/FileDownload/upload', // Your API endpoint for upload
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -45,7 +45,7 @@
             // Download zipped folder
             $('#downloadButton').click(function () {
                 $.ajax({
-                    url: 'https://trialserver-a3f4dhgmfvf5afag.canadaeast-01.azurewebsites.net/api/FileDownload/download-zip', // Azure API endpoint for zip download
+                    url: 'https://localhost:7158/api/FileDownload/download-zip', // Your API endpoint for zip download
                     type: 'GET',
                     xhrFields: {
                         responseType: 'blob'
@@ -69,3 +69,5 @@
     </script>
 </body>
 </html>
+
+has context menu
