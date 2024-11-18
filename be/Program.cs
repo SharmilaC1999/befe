@@ -34,8 +34,8 @@ app.UseCors("AllowAll");
 app.UseAuthorization();
 
 // Default route at root URL
-//app.MapGet("/", () => "Welcome to my API!");
-app.MapGet("/", () => "https://localhost:7158/swagger/index.html");
+app.MapGet("/", () => "Welcome to my API!");
+
 
 // Map controllers
 app.MapControllers();
