@@ -1,19 +1,22 @@
 var builder = WebApplication.CreateBuilder(args);
 
+// Add logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 // Add CORS policy
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
     {
-        builder.AllowAnyOrigin()  // Allow any origin
-               .AllowAnyMethod()  // Allow any HTTP method (GET, POST, etc.)
-               .AllowAnyHeader(); // Allow any headers
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
     });
 });
 
 // Add services to the container
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -27,12 +30,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-// Use CORS policy globally
 app.UseCors("AllowAll");
-
 app.UseAuthorization();
 
+// Default route at root URL
+app.MapGet("/", () => "Welcome to my API!");
+
+// Map controllers
 app.MapControllers();
 
 app.Run();
