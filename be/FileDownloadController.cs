@@ -9,14 +9,14 @@ namespace FileUploadDownloadApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors("AllowAll")] // Enable CORS
+    [EnableCors("AllowAll")]  // Allow CORS
     public class FileDownloadController : ControllerBase
     {
         // Endpoint to zip and download the folder
         [HttpGet("download-zip")]
         public IActionResult DownloadZippedFolder()
         {
-            string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "crud"); // Path to the crud folder
+            string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "crud"); // Specify your folder path
             string zipFilePath = Path.Combine(Path.GetTempPath(), "crud.zip");  // Temporary path to store the zip file
 
             if (!Directory.Exists(folderPath))
@@ -24,25 +24,20 @@ namespace FileUploadDownloadApi.Controllers
                 return NotFound("The specified folder does not exist.");
             }
 
-            // Create zip file
             if (System.IO.File.Exists(zipFilePath))
             {
-                System.IO.File.Delete(zipFilePath); // Delete existing zip if it exists
+                System.IO.File.Delete(zipFilePath); // Delete existing zip if any
             }
 
-            ZipFile.CreateFromDirectory(folderPath, zipFilePath); // Create zip from folder
+            ZipFile.CreateFromDirectory(folderPath, zipFilePath); // Create zip file from folder
 
-            // Read the zip file as bytes
-            byte[] fileBytes = System.IO.File.ReadAllBytes(zipFilePath);
+            byte[] fileBytes = System.IO.File.ReadAllBytes(zipFilePath); // Read zip as byte array
+            System.IO.File.Delete(zipFilePath); // Optionally delete the zip file after sending
 
-            // Optionally delete the zip file after reading it
-            System.IO.File.Delete(zipFilePath);
-
-            // Return the zip file for download
-            return File(fileBytes, "application/zip", "Crud.zip");
+            return File(fileBytes, "application/zip", "Crud.zip");  // Return zip file for download
         }
 
-        // Endpoint to upload files to the crud folder
+        // Endpoint to upload a file
         [HttpPost("upload")]
         public IActionResult UploadFiles(List<IFormFile> files)
         {
@@ -53,20 +48,20 @@ namespace FileUploadDownloadApi.Controllers
 
             try
             {
-                string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "crud"); // Path to crud folder
+                string uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
 
-                if (!Directory.Exists(folderPath))
+                if (!Directory.Exists(uploadFolderPath))
                 {
-                    Directory.CreateDirectory(folderPath); // Create crud folder if it doesn't exist
+                    Directory.CreateDirectory(uploadFolderPath);
                 }
 
                 foreach (var file in files)
                 {
-                    string filePath = Path.Combine(folderPath, file.FileName);
+                    var filePath = Path.Combine(uploadFolderPath, file.FileName);
 
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
-                        file.CopyTo(stream); // Save the file
+                        file.CopyTo(stream);
                     }
                 }
 
@@ -77,5 +72,6 @@ namespace FileUploadDownloadApi.Controllers
                 return StatusCode(500, "An error occurred while uploading the files: " + ex.Message);
             }
         }
+
     }
 }
