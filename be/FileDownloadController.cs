@@ -17,7 +17,7 @@ namespace FileUploadDownloadApi.Controllers
         public IActionResult DownloadZippedFolder()
         {
             string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "crud"); // Specify your folder path
-            string zipFilePath = Path.Combine(Path.GetTempPath(), "crud.zip");  // Temporary path to store the zip file
+            string zipFilePath = Path.Combine(Path.GetTempPath(), "Crud.zip");  // Temporary path to store the zip file
 
             if (!Directory.Exists(folderPath))
             {
